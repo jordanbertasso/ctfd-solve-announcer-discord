@@ -1,5 +1,8 @@
 [package]
 name = "ctfd-solve-announcer-discord"
+description = "A simple webhook based Discord bot to announce CTFd solves"
+license-file = "LICENSE"
+repository = "https://github.com/jordanbertasso/ctfd-solve-announcer-discord"
 version = "0.1.0"
 edition = "2021"
 
