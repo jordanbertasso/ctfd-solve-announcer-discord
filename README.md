@@ -13,3 +13,7 @@ Run with
 ```
 ctfd-solve-announcer-discord --help
 ```
+
+## Contributions
+
+Welcome! :D
