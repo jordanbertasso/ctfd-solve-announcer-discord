@@ -21,16 +21,16 @@ ctfd-solve-announcer-discord --help
 Build the docker image
 
 ```bash
-docker build --tag ctfdsolveannouncerdiscord .
+docker build --tag bot .
 ```
 
 Run a container using the created image and provide the environment variables
 
 ```bash
-docker run -d --name CtfdSolveAnnouncerDiscord \ 
+docker run -d --name ctfd-solve-announcer-discord \
     -e WEBHOOK_URL=<YOUR_WEBHOOK_URL> \
     -e CTFD_URL=<YOUR_CTFD_APP_URL> \
-    -e CTFD_API_KEY=<YOUR_CTFD_API_KEY> 
+    -e CTFD_API_KEY=<YOUR_CTFD_API_KEY>
 ```
 
 Enjoy!
