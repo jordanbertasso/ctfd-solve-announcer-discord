@@ -126,7 +126,6 @@ type TeamId = i64;
 type TeamPosition = i64;
 
 /// Announce when any team in the top 10 gets overtaken by any other team
-/// Scores are compared to do so
 async fn announce_top_10_overtakes(
     http: &Http,
     webhook: &Webhook,
