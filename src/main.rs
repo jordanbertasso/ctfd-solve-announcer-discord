@@ -2,7 +2,7 @@ mod ctfd;
 
 use std::collections::HashMap;
 
-use ctfd::{CTFdClient, ChallengeSolver};
+use ctfd::{CTFdClient, ChallengeSolver, TeamId, TeamPosition};
 use serenity::http::Http;
 use serenity::model::webhook::Webhook;
 
@@ -121,9 +121,6 @@ async fn announce_solves(
         }
     }
 }
-
-type TeamId = i64;
-type TeamPosition = i64;
 
 /// Announce when any team in the top 10 gets overtaken by any other team
 async fn announce_top_10_overtakes(
