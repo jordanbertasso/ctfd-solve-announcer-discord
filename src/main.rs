@@ -36,6 +36,10 @@ struct Args {
     /// Refresh interval in seconds
     #[arg(short, long, default_value = "5")]
     refresh_interval_seconds: u64,
+
+    /// team_mode
+    #[arg(long, default_value = "false")]
+    user_mode: bool,
 }
 
 async fn populate_announced_solves(
@@ -128,6 +132,7 @@ async fn announce_top_10_overtakes(
     webhook: &Webhook,
     ctfd_client: &CTFdClient,
     db_conn: &Connection,
+    user_mode: bool,
 )
 {
     // Get the previous top 10 teams
@@ -167,7 +172,12 @@ async fn announce_top_10_overtakes(
     //         Announce that they have overtaken the team that was previously at their current position
 
     for (team_id, position) in top_10_teams.iter() {
-        let team = ctfd_client.get_team(*team_id).await.unwrap();
+        let team;
+        if user_mode{
+            team = ctfd_client.get_user(*team_id).await.unwrap();
+        }else{
+            team = ctfd_client.get_team(*team_id).await.unwrap();
+        }
         let previous_team_in_position = previous_top_10_teams.iter().find(|(_, p)| **p == *position);
 
         // If there was no team at the current position then skip
@@ -175,7 +185,12 @@ async fn announce_top_10_overtakes(
             continue;
         } 
 
-        let previous_team = ctfd_client.get_team(*previous_team_in_position.unwrap().0).await.unwrap();
+        let previous_team;
+        if user_mode{
+            previous_team = ctfd_client.get_user(*previous_team_in_position.unwrap().0).await.unwrap();
+        } else{
+            previous_team = ctfd_client.get_team(*previous_team_in_position.unwrap().0).await.unwrap();
+        }
 
         if previous_top_10_teams.contains_key(team_id) {
             let previous_position = previous_top_10_teams.get(team_id).unwrap();
@@ -265,6 +280,7 @@ async fn main() {
             .push(solver);
     }
 
+
     // Skips announcing existing solves by default
     if args.skip_announcing_existing_solves {
         populate_announced_solves(&ctfd_client, &mut announced_solves).await;
@@ -272,7 +288,7 @@ async fn main() {
 
     loop {
         announce_solves(&http, &webhook, &ctfd_client, &mut announced_solves, &db_conn, args.announce_first_blood_only).await;
-        announce_top_10_overtakes(&http, &webhook, &ctfd_client, &db_conn).await;
+        announce_top_10_overtakes(&http, &webhook, &ctfd_client, &db_conn, args.user_mode).await;
 
         tokio::time::sleep(std::time::Duration::from_secs(args.refresh_interval_seconds)).await;
     }

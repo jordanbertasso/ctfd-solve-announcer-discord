@@ -34,6 +34,12 @@ pub struct Team {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+pub struct User {
+    pub id: i64,
+    pub name: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct ScoreboardEntry{
     pub id: i64,
     pub name: String,
@@ -73,6 +79,19 @@ impl CTFdClient {
 
     pub async fn get_team(&self, team_id: i64) -> Result<Team, reqwest::Error>{
         let url = format!("{}/api/v1/teams/{}", self.url, team_id);
+        let response = self
+            .client
+            .get(&url)
+            .send()
+            .await?
+            .json::<APIResponse<Team>>()
+            .await?;
+
+        Ok(response.data.unwrap())
+    }
+
+    pub async fn get_user(&self, team_id: i64) -> Result<Team, reqwest::Error>{
+        let url = format!("{}/api/v1/users/{}", self.url, team_id);
         let response = self
             .client
             .get(&url)
