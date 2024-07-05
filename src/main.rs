@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 mod ctfd;
 
 use std::collections::HashMap;
@@ -272,7 +274,7 @@ async fn main() {
 
     loop {
         announce_solves(&http, &webhook, &ctfd_client, &mut announced_solves, &db_conn, args.announce_first_blood_only).await;
-        announce_top_10_overtakes(&http, &webhook, &ctfd_client, &db_conn).await;
+        //announce_top_10_overtakes(&http, &webhook, &ctfd_client, &db_conn).await;
 
         tokio::time::sleep(std::time::Duration::from_secs(args.refresh_interval_seconds)).await;
     }
